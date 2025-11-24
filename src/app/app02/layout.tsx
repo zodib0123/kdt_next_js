@@ -17,7 +17,6 @@ export default function App02Layout({
                         </li>
                         <li className="m-3">동구</li>
                         <li className="m-3">서구</li>
-                        <li className="m-3">정청</li>
                     </ul>
                 </nav>
             </aside>

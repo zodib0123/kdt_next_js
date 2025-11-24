@@ -15,9 +15,12 @@ export default function App01Layout({
                         <li className="my-2">
                             <Link href="/app01/junggu" className="hover:bg-blue-200">중구</Link>
                         </li>
-                        <li className="my-2">동구</li>
-                        <li className="my-2">서구</li>
-                        <li className="my-2">정청</li>
+                        <li className="my-2">
+                            <Link href="/app01/donggu" className="hover:bg-blue-200">동구</Link>
+                        </li>
+                        <li className="my-2">
+                            <Link href="/app01/seogu" className="hover:bg-blue-200">서구</Link>
+                        </li>
                     </ul>
                 </nav>
             </aside>

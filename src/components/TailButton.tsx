@@ -11,7 +11,11 @@ const BTStyle = {
   lime : {
     base : "bg-lime-500",
     hover : "hover:bg-lime-900",
-  }
+  }, 
+  yellow : {
+    base : "bg-yellow-500",
+    hover : "hover:bg-yellow-900"
+  },
 } as const;
 
 type BTColor = keyof typeof BTStyle;

@@ -1,5 +1,5 @@
 
-import { RestaurantType } from "@/ts/RestaurantType";
+import { RestaurantType } from "@/types/RestaurantType";
 import Image from "next/image";
 import Link from "next/link";
 

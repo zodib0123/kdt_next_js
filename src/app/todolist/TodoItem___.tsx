@@ -1,47 +1,28 @@
 import TailButton from "@/components/TailButton"
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import type { todoDataType } from "./TodoDataType";
 
 interface TotoItemProps {
     todo : todoDataType,
-    getTodos: () => void
+    todos : todoDataType[],
+    setTodos : (newItem:todoDataType[]) => void
 }
-export default function TodoItem({todo, getTodos} : TotoItemProps) {
+export default function TodoItem({todo, todos, setTodos} : TotoItemProps) {
+    
     const [isEdit, setIsEdit] = useState(false);
     const [editText, setEditText] = useState(todo.text);
-    const todoUrl = "http://localhost:3000/api/todo";
 
-    const handleToggle = async () => {
-        const response = await fetch(`${todoUrl}?id=${todo.id}`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ completed: !todo.completed }),
-            cache: 'no-store'
-        });
-        if (response.ok) {
-            getTodos();
-        } else {
-            console.error('Error toggling todo:', response.statusText);
-        }
+    const handleToggle = () => {
+        setTodos(
+            todos.map( t => t.id == todo.id ? { ...t, completed : !todo.completed } : t)
+        );   
     }
 
-    const handleSave = async () => {
-        const response = await fetch(`${todoUrl}?id=${todo.id}`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ text: editText }),
-            cache: 'no-store'
-        });
-        if (response.ok) {
-            getTodos();
-            setIsEdit(false);
-        } else {
-            console.error('Error toggling todo:', response.statusText);
-        }
+    const handleSave = () => {
+        setTodos(
+            todos.map( t => t.id == todo.id ? { ...t, text : editText } : t)
+        );
+        setIsEdit(false);
     }
 
     const handleCancle = () => {
@@ -49,20 +30,11 @@ export default function TodoItem({todo, getTodos} : TotoItemProps) {
         setIsEdit(false);
     }
 
-    const handleDelete = async () => {
-        const response = await fetch(`${todoUrl}?id=${todo.id}`, {
-            method: 'DELETE'
-        });
-        if (response.ok) {
-            getTodos();
-        } else {
-            console.error('Error deleting todo:', response.statusText);
-        }
+    const handleDelete = () => {
+        setTodos(
+            todos.filter( t => t.id != todo.id)
+        );
     }
-
-    useEffect(() => {
-        setEditText(todo.text);
-    }, [todo.text]);
 
     return (
         <div className="w-full flex p-5 items-center">
@@ -75,7 +47,7 @@ export default function TodoItem({todo, getTodos} : TotoItemProps) {
                                   onChange={(e) => setEditText(e.target.value)}
                                   className="ml-5 flex-1 border border-gray-600 px-4 focus:outline-none focus:ring-2 focus:ring-blue-600 rounded-sm"
                            />
-                         : <span className="ml-5">{todo.text}</span>
+                         : <span className="ml-5">{editText}</span>
                 }                
             </div>
             {

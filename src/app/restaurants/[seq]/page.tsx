@@ -1,27 +1,34 @@
 import RestaurantsData from "@/data/부산맛집.json"
+import type { RestaurantType } from "@/types/RestaurantType"
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 
 
 interface RestaurantDetailProps {
-    params: Promise<{ seq: number }>
+    params: Promise<{ seq: string }>
+}
+
+export async function generateStaticParams() {
+    const restaurants: RestaurantType[] = RestaurantsData;
+    return restaurants.map((restaurant) => ({
+        seq: String(restaurant.UC_SEQ),
+    }));
 }
 
 export default async function RestaurantDetail({ params }: RestaurantDetailProps) {
     const { seq } = await params;
-    const restaurant = RestaurantsData.find(item => item.UC_SEQ == seq);
+    const restaurant = RestaurantsData.find(item => item.UC_SEQ === Number(seq));
     if (restaurant == undefined) {
         notFound();
     }
 
     const description = restaurant.ITEMCNTNTS?.replace(/\\n/g, '\n') || '상세 설명이 없습니다.';
-    console.log(description);
     const usageTime = restaurant.USAGE_DAY_WEEK_AND_TIME?.replace(/\\n/g, '\n') || '운영 시간 정보가 없습니다.';
     const kakaoMapUrl = `https://map.kakao.com/link/map/${restaurant?.MAIN_TITLE.replace(',', '').replace(' ', '')},${restaurant?.LAT},${restaurant?.LNG}`;
 
     return (
-        <div className="w-full flex flex-col justify-start items-center px-10 my-5">
+        <div className="w-full flex flex-col justify-start items-center px-10 my-5 max-w-6xl">
             {
                 restaurant ?
                     <>
@@ -68,7 +75,7 @@ export default async function RestaurantDetail({ params }: RestaurantDetailProps
                                     <div className="flex items-start">
                                         <Link href={restaurant.HOMEPAGE_URL} className="bg-blue-600 hover:bg-blue-800 rounded-xl text-white font-bold px-5 py-3 mt-5 mr-5" >홈페이지</Link>
                                         <Link href={kakaoMapUrl} className="bg-amber-300 hover:bg-amber-500 rounded-xl font-bold px-5 py-3 mt-5" >카카오앱으로 보기</Link>
-                                    </div>                                    
+                                    </div>
                                 </div>
                                 <div>
                                     <h1 className="text-xl font-bold py-2">상세 설명</h1>

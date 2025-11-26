@@ -1,30 +1,35 @@
 import TailButton from "@/components/TailButton"
 import { useEffect, useRef } from "react";
-import type { todoDataType } from "./TodoDataType";
 
 interface TodoInputProps {
-    todos : todoDataType[]
-    setTodos : (newItem:todoDataType[]) => void
+    getTodos : () => void
 }
-export default function TodoInput({todos, setTodos} : TodoInputProps) {
+export default function TodoInput({getTodos} : TodoInputProps) {
 
     const inRef = useRef<HTMLInputElement>(null);
-    const handleAdd = () => {
+    const todoUrl = "http://localhost:3000/api/todo";
+    const handleAdd = async () => {
         if (!inRef.current) return;
         if (inRef.current.value == "") {
             alert("값을 입력해주세요.");
             inRef.current.focus();
             return ;
         }
-
-        const newItem = {
-            id : Date.now(),
-            text : inRef.current.value,
-            completed : false
+    const response = await fetch(`${todoUrl}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id: Date.now(), text: inRef.current.value, completed: false }),
+            cache: 'no-store',
+        });
+        if (response.ok) {
+            getTodos();
+            inRef.current.value = "";
+            inRef.current.focus();
+        } else {
+            console.error('Error adding todo:', response.statusText);
         }
-        setTodos([newItem, ...todos]);
-        inRef.current.value = "";
-        inRef.current.focus();
     }
 
     useEffect(() => {

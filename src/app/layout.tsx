@@ -31,7 +31,7 @@ export default function RootLayout({
       >
         <div className="w-full h-screen flex flex-col overflow-y-hidden">
             <Header />
-            <main className='flex flex-col grow overflow-y-auto'>
+            <main className='flex flex-col grow overflow-y-auto justify-start items-center'>
                 {children}
             </main>
             <Footer />
